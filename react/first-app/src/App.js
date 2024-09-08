@@ -33,7 +33,8 @@ function App() {
 
   function freezeDice(id) {
       setDiceArr(diceArr.map((dice,idx) => {
-        if (id === idx) {
+        if (idx === id) {
+          console.log("triggered")
           return {
             ...dice,
             freeze: !dice.freeze
@@ -42,6 +43,7 @@ function App() {
           return dice
         }
       }))
+
   }
 
   const renderDice = diceArr.map((dice, idx) => <Dice 
