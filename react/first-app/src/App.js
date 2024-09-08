@@ -6,7 +6,6 @@ function App() {
 
   const [diceArr, setDiceArr] =  React.useState(newDice())
 
-
   function generateDice() {
     let val = Math.ceil(Math.random() *6)
     return {
@@ -16,16 +15,20 @@ function App() {
   }
 
   function newDice() {
-    return Array.from({ length: 10 }, generateDice);
+    let newDiceArr = new Array(10).fill(0)
+    newDiceArr = newDiceArr.map(dice => generateDice())
+    return newDiceArr
   }
 
-  function renderDice() {
-    return diceArr.map((dice, idx) => <Dice 
-        key={dice.idx}
-        val={dice.val}
-        freeze={dice.freeze}
-        freezeDice={() => freezeDice(idx)}
-    />)
+  function roll() {
+    setDiceArr(dices => dices.map(dice =>
+      {
+        if (!dice.freeze) {
+          return generateDice()
+      } else {
+        return dice
+      }} 
+    ))
   }
 
   function freezeDice(id) {
@@ -41,13 +44,21 @@ function App() {
       }))
   }
 
+  const renderDice = diceArr.map((dice, idx) => <Dice 
+        key={idx}
+        val={dice.val}
+        freeze={dice.freeze}
+        freezeDice={() => freezeDice(idx)}
+    />)
+
   return (
     <main>
         <h1> Tenzies </h1>
         <p className='description'>Roll until all dice are the same. Click each die to freeze it at its current value between rolls</p>
         <div className='diceContainer'> 
-          {renderDice()}
-        </div>  
+          {renderDice}
+        </div>
+        <button onClick={roll}>Roll</button>  
     </main>)
 
 }
