@@ -3,7 +3,7 @@ import './Dice.css'
 
 export default function Dice(props) {
     const diceStyle = {
-        backgroundColor: props.freeze ? "#59E391" : "white"
+        backgroundColor: props.freeze ? "aqua" : "white"
     }
 
     return <div className="face" onClick={props.freezeDice} style={diceStyle}>

@@ -5,6 +5,20 @@ import Dice from './Components/Dice.js'
 function App() {
 
   const [diceArr, setDiceArr] =  React.useState(newDice())
+  const [isWon, setWon] = React.useState(false)
+
+  React.useEffect(() => {
+      let diceVal = diceArr[0].val
+      const sameVal = (currDice) => currDice.val === diceVal
+      const isFrozen = (currDice) => currDice.freeze
+      setWon(prevState => diceArr.every(sameVal) && diceArr.every(isFrozen))
+  }, [diceArr])
+  
+  React.useEffect(() => {
+    if (isWon) {
+      alert("You Won!")
+    }
+  } , [isWon])
 
   function generateDice() {
     let val = Math.ceil(Math.random() *6)
@@ -21,20 +35,28 @@ function App() {
   }
 
   function roll() {
-    setDiceArr(dices => dices.map(dice =>
+
+    function rollOldDice() { 
+      setDiceArr(dices => dices.map(dice =>
       {
         if (!dice.freeze) {
           return generateDice()
       } else {
         return dice
       }} 
-    ))
+    ))}
+
+      if (isWon) {
+        setDiceArr(newDice())
+        setWon(false)
+      } else {
+        rollOldDice()
+      }
   }
 
   function freezeDice(id) {
       setDiceArr(diceArr.map((dice,idx) => {
         if (idx === id) {
-          console.log("triggered")
           return {
             ...dice,
             freeze: !dice.freeze
@@ -60,7 +82,7 @@ function App() {
         <div className='diceContainer'> 
           {renderDice}
         </div>
-        <button onClick={roll}>Roll</button>  
+        <button onClick={roll}>{isWon ? 'New Game?' : 'Roll'}</button>  
     </main>)
 
 }
